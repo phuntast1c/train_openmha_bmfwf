@@ -10,7 +10,6 @@ import torch
 import torchaudio as ta
 from torch.utils.data._utils.collate import default_collate
 
-ta.set_audio_backend("soundfile")
 
 EPS = torch.as_tensor(torch.finfo(torch.get_default_dtype()).eps)
 PI = math.pi

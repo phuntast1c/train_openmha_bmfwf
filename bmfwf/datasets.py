@@ -7,12 +7,35 @@ import torchaudio as ta
 from . import utils
 from torch.utils.data import DataLoader
 
-ta.set_audio_backend("soundfile")
 
 EPS = torch.as_tensor(torch.finfo(torch.get_default_dtype()).eps)
 
 
 class H4a2RLFixedDataset(torch.utils.data.Dataset):
+    """
+    A PyTorch Dataset class for loading and processing audio data for training.
+
+    Args:
+        root_dir (str): The root directory containing the dataset.
+        target_type (str, optional): The type of target data. Defaults to "target_2".
+
+    Attributes:
+        root_dir (str): The root directory containing the dataset.
+        target_type (str): The type of target data.
+        length (int): The number of files in the "mix" directory.
+        dirs (dict): A dictionary containing paths to the "mix" and target directories.
+        channels (tuple): The channels to be used from the mix data (in order [l_front,l_back,r_front,r_back]).
+        ref_channels (tuple): The reference channels to be used for evaluation.
+
+    Methods:
+        __len__(): Returns the number of samples in the dataset.
+        __getitem__(idx): Loads and returns the input, target signals, and metadata for a given index.
+
+    Example:
+        dataset = H4a2RLFixedDataset(root_dir="/path/to/data", target_type="target_2")
+        data_loader = torch.utils.data.DataLoader(dataset, batch_size=32, shuffle=True)
+    """
+
     def __init__(self, root_dir: str, target_type: str = "target_2"):
         self.root_dir = root_dir
         self.target_type = target_type
@@ -33,6 +56,22 @@ class H4a2RLFixedDataset(torch.utils.data.Dataset):
         return self.length
 
     def __getitem__(self, idx: int):
+        """
+        Retrieves the audio data and corresponding metadata for a given index.
+
+        Args:
+            idx (int): The index of the audio file to retrieve.
+
+        Returns:
+            tuple: A tuple containing:
+                - signals (dict): A dictionary with the following keys:
+                    - "input" (torch.Tensor): The mixed audio signal. Dimensions are (n_channels==4, n_samples).
+                    - "input_eval" (torch.Tensor): The mixed audio signal for evaluation. Dimensions are (2, n_samples).
+                    - "target" (torch.Tensor): The target audio signal. Dimensions are (2, n_samples).
+                - meta (dict): A dictionary with metadata, including:
+                    - "idx" (int): The index of the audio file.
+                    - "filename_mix" (str): The file path of the mixed audio file.
+        """
         mix, _ = sf.read(os.path.join(self.dirs["mix"], f"file_{idx}.wav"))
 
         if self.target_type == "reverberant":

@@ -131,3 +131,5 @@ log.*
 conda_list.txt
 wandb/run-20241003_162518-pvy882oe/files/requirements.txt
 full_env.yaml
+bmfwf/saved/20231018_090629_yellow-dish-5/model_bmfwf_qint8.pt
+bmfwf/saved/20231018_090629_yellow-dish-5/model_bmfwf.pt
