@@ -1,0 +1,3 @@
+class_path: bmfwf.datasets.DummyDataModule
+init_args:
+  num_workers: 8

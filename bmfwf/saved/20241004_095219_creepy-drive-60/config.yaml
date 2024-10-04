@@ -1,0 +1,88 @@
+# lightning.pytorch==2.0.6
+seed_everything: 1337
+trainer:
+  accelerator: gpu
+  strategy: ddp
+  devices: 1
+  num_nodes: 1
+  precision: 32-true
+  logger: <lightning.pytorch.loggers.csv_logs.CSVLogger object at 0x7f5fffcc3fd0>
+  callbacks: null
+  fast_dev_run: false
+  max_epochs: 20
+  min_epochs: null
+  max_steps: -1
+  min_steps: null
+  max_time: null
+  limit_train_batches: null
+  limit_val_batches: null
+  limit_test_batches: null
+  limit_predict_batches: null
+  overfit_batches: 0.0
+  val_check_interval: null
+  check_val_every_n_epoch: 1
+  num_sanity_val_steps: 1
+  log_every_n_steps: 100
+  enable_checkpointing: null
+  enable_progress_bar: true
+  enable_model_summary: null
+  accumulate_grad_batches: 1
+  gradient_clip_val: 5.0
+  gradient_clip_algorithm: null
+  deterministic: false
+  benchmark: true
+  inference_mode: true
+  use_distributed_sampler: true
+  profiler: null
+  detect_anomaly: false
+  barebones: false
+  plugins: null
+  sync_batchnorm: false
+  reload_dataloaders_every_n_epochs: 0
+  default_root_dir: /home/marvint/repositories/train_openmha_bmfwf/bmfwf/saved/20241004_095219_creepy-drive-60
+checkpoint: null
+job_type: fit
+ckpt_path: null
+model:
+  class_path: bmfwf.models.BMWF
+  init_args:
+    learning_rate: 0.001
+    batch_size: 16
+    loss: MagnitudeAbsoluteError
+    metrics_test: PESQWB,PESQNB,PESQNBRAW,STOI,ESTOI,SISDR
+    metrics_val: ''
+    my_optimizer: Adam
+    my_lr_scheduler: ReduceLROnPlateau
+    frame_length: 64
+    fft_length: 128
+    shift_length: 32
+    filter_length: 4
+    num_channels: 1
+    reg: 0.001
+    time_constant_recursive_smoothing: 0.002
+    window_type: hann
+    feature_representation: real_imag
+    auxiliary_input: none
+    binaural: true
+    use_mwf: false
+    D: 32
+    E: 8
+    I: 8
+    J: 4
+    Q: null
+    H: 128
+    E_prime: 64
+    I_prime: 5
+    J_prime: 5
+    Q_prime: null
+    H_prime: 32
+    B: 2
+    nonlin: Mish
+    use_log: true
+    normalization_type: cGLN
+    use_first_norm: true
+    use_bias: true
+data:
+  class_path: bmfwf.datasets.DummyDataModule
+  init_args:
+    num_workers: 0
