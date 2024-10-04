@@ -15,7 +15,74 @@ PI = math.pi
 
 class BMWF(BaseLitModel):
     """
-    binaural deep MWF
+    Binaural Deep Multi-Frame Wiener Filter (BMFWF) model.
+
+    The DNN architecture is based on Wang et al., “Neural Speech Enhancement with Very Low
+    Algorithmic Latency and Complexity via Integrated full- and sub-band Modeling”, in Proc. IEEE
+    International Conference on Acoustics, Speech and Signal Processing (ICASSP) 2023. It was
+    modified to decrease computational complexity.
+    The MFWF implementation is similar to Wang et al., “TF-GridNet: Integrating Full- and Sub-
+    Band Modeling for Speech Separation”, in IEEE/ACM Transactions on Audio, Speech, and
+    Language Processing, vol. 31, 2023, Eq. (14). It was modified for online processing using
+    recursive smoothing.
+
+    Attributes:
+        learning_rate (float): Learning rate for the optimizer.
+        batch_size (int): Batch size for training.
+        loss (str): Loss function to be used.
+        metrics_test (Union[tuple, str]): Metrics for testing.
+        metrics_val (Union[tuple, str]): Metrics for validation.
+        my_optimizer (str): Optimizer to be used.
+        my_lr_scheduler (str): Learning rate scheduler to be used.
+        frame_length (int): Frame length for STFT.
+        fft_length (int): FFT length for STFT.
+        shift_length (int): Shift length for STFT.
+        filter_length (int): Filter length for multi-frame processing.
+        fs (int): Sampling frequency.
+        num_channels (int): Number of channels.
+        reg (float): Regularization parameter.
+        time_constant_recursive_smoothing (float): Time constant for recursive smoothing.
+        window_type (str): Type of window to be used for STFT.
+        feature_representation (str): Type of feature representation ('real_imag', 'mag_phase', 'mag').
+        auxiliary_input (str): Type of auxiliary input ('none', 'matched_filter').
+        binaural (bool): Whether to use binaural processing.
+        use_mwf (bool): Whether to use multi-frame Wiener filtering.
+        D (int): DNN parameter.
+        E (int): DNN parameter.
+        I (int): DNN parameter.
+        J (int): DNN parameter.
+        Q (int): DNN parameter.
+        H (int): DNN parameter.
+        E_prime (int): DNN parameter.
+        I_prime (int): DNN parameter.
+        J_prime (int): DNN parameter.
+        Q_prime (int): DNN parameter.
+        H_prime (int): DNN parameter.
+        B (int): DNN parameter.
+        nonlin (str): Non-linearity to be used in DNN.
+        use_log (bool): Whether to use logarithmic features.
+        normalization_type (str): Type of normalization to be used.
+        use_first_norm (bool): Whether to use first normalization.
+        use_bias (bool): Whether to use bias in DNN layers.
+
+    Methods:
+        get_hrtf_front(self):
+        Loads and processes the Head-Related Transfer Function (HRTF) for the front direction. Used to generate auxiliary input with a matched filter.
+
+        get_estimators(self):
+            Initializes the estimators for the model based on the feature representation.
+
+        forward(self, x):
+            Performs a forward pass through the model.
+
+        get_binaural_multiframe_vector(self, singleframe):
+            Computes the multi-frame vector for binaural processing.
+
+        get_multiframe_vector(self, singleframe):
+            Computes the multi-frame vector for single-channel processing.
+
+        get_features(self, noisy, auxiliary_input):
+            Extracts features from the noisy input and auxiliary input based on the feature representation.
     """
 
     def __init__(

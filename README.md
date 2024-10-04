@@ -3,6 +3,9 @@ The BMFWF is a deep learning-based speech enhancement algorithm that can be used
 The model is available as a PyTorch model.
 This repository provides the necessary PyTorch-Lightning-based scripts to train the model on your own data and export it to TorchScript format for use as a replacement of the openMHA plugin.
 
+The deep neural network architecture is based on [Wang et al., ICASSP 2023](https://ieeexplore.ieee.org/document/10095700), modified to decrease computational complexity.
+The BMFWF implementation is inspired from [Wang et al., T-ASLP 2023](https://ieeexplore.ieee.org/document/10214650), modified for online processing using recursive smoothing.
+
 # Installation Guide
 Follow these steps to set up the environment and ensure everything is working correctly:
 
